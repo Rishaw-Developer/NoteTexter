@@ -1,0 +1,6 @@
+# Ignore the build directory
+/build
+
+# Ignore the pycache folder
+
+/__pycache__
