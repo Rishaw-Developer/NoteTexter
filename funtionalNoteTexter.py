@@ -4,24 +4,33 @@ Note Texter is a text editor made for editing txt files.
 Author: Rishaw
 Author-Email: ratneshthakur.40@gmail.com or rishav.9212@gmail.com
 """
-
 # This is not based on object oriented programming
 import os
 from tkinter import *
 from tkinter.ttk import *
 from tkinter import messagebox
-from tkinter.filedialog import askopenfile, askopenfilename
+from tkinter.filedialog import askopenfilename, asksaveasfilename
 
 app = Tk()
 app.title("Note Texter")
 
 # frame 1
 frame1 = Frame(app, relief=None)
-frame1.pack()
+frame1.pack(fill=BOTH, expand=True)
 
-# frame 2
-frame2 = Frame(app, relief=None)
-frame2.pack(fill=BOTH, expand=True)
+# Created menu bar
+menuBar = Menu(app)
+
+# Scroll View in Text widget
+scrollbarY = Scrollbar(frame1)
+scrollbarY.pack(side=RIGHT, fill=Y)
+
+
+def newFile():
+    global filename
+    app.title("Untitled - Notepad")
+    filename = None
+    t1.delete(1.0, END)
 
 
 def openFile():
@@ -35,28 +44,60 @@ def openFile():
             app.title(os.path.basename(filename) + " - Note Texter")
             t1.delete("1.0", "end")
             t1.insert(END, file.read())
+            file.close()
         except Exception as e:
             messagebox.showerror("Error", e, parent=app)
 
 
 def saveFile():
-    file = open(filename, "w")
-    file.write(t1.get("1.0", END))
-    file.close()
+    global filename
+    if filename == None:
+        filename = asksaveasfilename(initialfile='Untitled.txt', defaultextension=".txt",
+                                     filetypes=[("All Files", "*.*"),
+                                                ("Text Documents", "*.txt")])
+        if filename == "":
+            filename = None
+
+        else:
+            f = open(filename, "w")
+            f.write(t1.get(1.0, END))
+            f.close()
+
+            app.title(os.path.basename(filename) + " - Notepad")
+            print("File Saved")
+    else:
+        f = open(filename, "w")
+        f.write(t1.get('1.0', END))
+        f.close()
+
+def saveAsFile():
+    global filename
+    filename = asksaveasfilename(initialfile='Untitled.txt', defaultextension=".txt",
+                                     filetypes=[("All Files", "*.*"),
+                                                ("Text Documents", "*.txt")])
+
+    f = open(filename, "w")
+    f.write(t1.get('1.0', END))
+    f.close()
+    app.title(os.path.basename(filename) + " - Note Texter")
 
 
-# frame 1 components
-b1 = Button(frame1, text="Open", command=lambda: openFile()) # This is button for opening a file
-b1.grid(row=0, column=0)
+# Adding File Menu and commands
+file = Menu(menuBar, tearoff=0)
+menuBar.add_cascade(label='File', menu=file)
+file.add_command(label='New File', command=lambda: newFile())
+file.add_command(label='Open...', command=lambda: openFile())
+file.add_command(label='Save', command=lambda: saveFile()) 
+file.add_command(label='Save As', command=lambda: saveAsFile()) 
+file.add_separator()
+file.add_command(label='Exit', command=app.destroy)
 
-b2 = Button(frame1, text="Save", command=lambda: saveFile()) # This is button for saving a file
-b2.grid(row=0, column=1)
-
-b3 = Button(frame1, text="Exit", command=exit) # This is button for closing the window
-b3.grid(row=0, column=2)
-
-# frame 2 components
-t1 = Text(frame2, font=("cascadia code", 10))
+# frame 1 component
+t1 = Text(frame1, font=("cascadia code", 10))
 t1.pack(fill=BOTH, expand=True)
 
+t1.config(yscrollcommand=scrollbarY.set)
+scrollbarY.config(command=t1.yview)
+
+app.config(menu=menuBar)
 app.mainloop()
