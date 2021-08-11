@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(['NoteTexter.py'],
-             pathex=['D:\\Python Projects\\Note Texter'],
+             pathex=['D:\\Python Projects\\NoteTexter'],
              binaries=[],
              datas=[],
              hiddenimports=[],

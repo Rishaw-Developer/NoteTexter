@@ -17,12 +17,11 @@ class NoteTexter:
         self.app = Tk()
         self.app.title("Note Texter")
         self.frame1 = self.createFrame(BOTH, True)
-        self.t1 = self.createTextBox()
         self.menuBar = Menu(self.app)
         self.createButtons()
         self.app.config(menu=self.menuBar)
         self.scrollbarY = self.createScrollbar()
-        self.t1.config(yscrollcommand=self.scrollbarY.set)
+        self.t1 = self.createTextBox()
         self.scrollbarY.config(command=self.t1.yview)
 
 
@@ -88,6 +87,7 @@ class NoteTexter:
         """This funtion returns the widget where the text is shown and written"""
         t1 = Text(self.frame1, font=("cascadia code", 10))
         t1.pack(fill=BOTH, expand=True)
+        t1.config(yscrollcommand=self.scrollbarY.set)
         return t1
 
     def createButtons(self):
