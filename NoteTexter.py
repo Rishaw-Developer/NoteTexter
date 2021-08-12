@@ -11,6 +11,7 @@ from tkinter import *
 from tkinter.ttk import *
 from tkinter import messagebox
 from tkinter.filedialog import askopenfilename, asksaveasfilename
+from speakText import speak
 
 class NoteTexter:
     def __init__(self):
@@ -18,7 +19,7 @@ class NoteTexter:
         self.app.title("Note Texter")
         self.frame1 = self.createFrame(BOTH, True)
         self.menuBar = Menu(self.app)
-        self.createButtons()
+        self.createMenuBar()
         self.app.config(menu=self.menuBar)
         self.scrollbarY = self.createScrollbar()
         self.t1 = self.createTextBox()
@@ -53,7 +54,7 @@ class NoteTexter:
                                      filetypes=[("All Files", "*.*"),
                                                 ("Text Documents", "*.txt")])
             if self._filename == "":
-                filename = None
+                self._filename = None
 
             else:
                 f = open(self._filename, "w")
@@ -90,7 +91,7 @@ class NoteTexter:
         t1.config(yscrollcommand=self.scrollbarY.set)
         return t1
 
-    def createButtons(self):
+    def createMenuBar(self):
         """This function creates Menu Bar in window"""
         file = Menu(self.menuBar, tearoff=0)
         self.menuBar.add_cascade(label='File', menu=file)
@@ -100,6 +101,10 @@ class NoteTexter:
         file.add_command(label='Save As', command=lambda: self.saveAsFile()) 
         file.add_separator()
         file.add_command(label='Exit', command=self.app.destroy)
+
+        power = Menu(self.menuBar, tearoff=0)
+        self.menuBar.add_cascade(label='Power', menu=power)
+        power.add_command(label="Read the text", command=lambda: speak(self.t1.get('1.0', END)))
 
     def createFrame(self, *args):
         """This function creates the frames"""

@@ -10,6 +10,7 @@ from tkinter import *
 from tkinter.ttk import *
 from tkinter import messagebox
 from tkinter.filedialog import askopenfilename, asksaveasfilename
+from speakText import speak
 
 app = Tk()
 app.title("Note Texter")
@@ -80,6 +81,7 @@ def saveAsFile():
     f.write(t1.get('1.0', END))
     f.close()
     app.title(os.path.basename(filename) + " - Note Texter")
+    
 
 
 # Adding File Menu and commands
@@ -91,6 +93,10 @@ file.add_command(label='Save', command=lambda: saveFile())
 file.add_command(label='Save As', command=lambda: saveAsFile()) 
 file.add_separator()
 file.add_command(label='Exit', command=app.destroy)
+
+godSec = Menu(menuBar, tearoff=0)
+menuBar.add_cascade(label='God Section', menu=godSec)
+godSec.add_command(label='Read the text', command=lambda: speak(t1.get('1.0', END)))
 
 # frame 1 component
 t1 = Text(frame1, font=("cascadia code", 10))
