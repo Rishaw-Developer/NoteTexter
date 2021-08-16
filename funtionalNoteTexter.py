@@ -83,7 +83,6 @@ def saveAsFile():
     app.title(os.path.basename(filename) + " - Note Texter")
     
 
-
 # Adding File Menu and commands
 file = Menu(menuBar, tearoff=0)
 menuBar.add_cascade(label='File', menu=file)
